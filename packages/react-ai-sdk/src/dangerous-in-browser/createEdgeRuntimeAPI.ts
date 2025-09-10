@@ -8,7 +8,7 @@ import {
 import { toLanguageModelMessages } from "../converters/toLanguageModelMessages";
 import { toLanguageModelTools } from "../converters/toLanguageModelTools";
 import { AssistantStreamChunk } from "assistant-stream";
-import { LanguageModelV1StreamDecoder } from "assistant-stream/ai-sdk";
+import { LanguageModelV1StreamDecoder } from "../assistant-stream-ai-sdk/language-model";
 import { ThreadMessage, Tool } from "@assistant-ui/react";
 
 export type LanguageModelV1CallSettings = {
