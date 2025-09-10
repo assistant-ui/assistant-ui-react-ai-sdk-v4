@@ -1,63 +1,36 @@
 import { AppendMessage } from "@assistant-ui/react";
-import {
-  CreateUIMessage,
-  FileUIPart,
-  generateId,
-  UIDataTypes,
-  UIMessage,
-  UIMessagePart,
-  UITools,
-} from "ai";
+import { CreateMessage } from "@ai-sdk/ui-utils";
 
-export const toCreateMessage = async <UI_MESSAGE extends UIMessage = UIMessage>(
+export const toCreateMessage = async (
   message: AppendMessage,
-): Promise<CreateUIMessage<UI_MESSAGE>> => {
-  const textParts = message.content
+): Promise<CreateMessage> => {
+  const content = message.content
     .filter((part) => part.type === "text")
     .map((t) => t.text)
     .join("\n\n");
 
-  const parts: UIMessagePart<UIDataTypes, UITools>[] = [
-    {
-      type: "text",
-      text: textParts,
-    },
-  ];
-
-  // Add image parts
-  const imageParts = message.content
+  const images = message.content
     .filter((part) => part.type === "image")
-    .map(
-      (part) =>
-        ({
-          type: "file",
-          mediaType: "image/png", // Default to PNG, could be made more dynamic
-          url: part.image,
-        }) satisfies FileUIPart,
-    );
-
-  parts.push(...imageParts);
-
-  // Add attachment parts
-  const attachmentParts = await Promise.all(
-    (message.attachments ?? []).map(async (m) => {
-      if (m.file == null) throw new Error("Attachment did not contain a file");
-      return {
-        type: "file",
-        mediaType: m.file.type,
-        filename: m.file.name,
-        url: await getFileDataURL(m.file),
-      } satisfies FileUIPart;
-    }),
-  );
-
-  parts.push(...attachmentParts);
+    .map((part) => ({ url: part.image }));
 
   return {
-    id: generateId(),
     role: message.role,
-    parts,
-  } satisfies CreateUIMessage<UIMessage> as CreateUIMessage<UI_MESSAGE>;
+    content,
+    experimental_attachments: [
+      ...images,
+      ...(await Promise.all(
+        (message.attachments ?? []).map(async (m) => {
+          if (m.file == null)
+            throw new Error("Attachment did not contain a file");
+          return {
+            contentType: m.file.type,
+            name: m.file.name,
+            url: await getFileDataURL(m.file),
+          };
+        }),
+      )),
+    ],
+  };
 };
 
 const getFileDataURL = (file: File) =>

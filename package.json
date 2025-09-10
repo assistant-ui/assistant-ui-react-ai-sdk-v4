@@ -1,5 +1,5 @@
 {
-  "name": "@assistant-ui/monorepo",
+  "name": "@assistant-ui/ai-sdk-v4-monorepo",
   "private": true,
   "scripts": {
     "docs:dev": "pnpm --filter=@assistant-ui/docs dev",

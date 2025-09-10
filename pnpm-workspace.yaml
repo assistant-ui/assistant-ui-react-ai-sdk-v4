@@ -1,7 +1,5 @@
 packages:
   - packages/*
-  - examples/*
-  - apps/*
 onlyBuiltDependencies:
   - "@tailwindcss/oxide"
   - esbuild

@@ -1,3 +1,4 @@
-export { useAISDKRuntime } from "./use-chat/useAISDKRuntime";
-export { useChatRuntime } from "./use-chat/useChatRuntime";
-export { AssistantChatTransport } from "./use-chat/AssistantChatTransport";
+export { useVercelUseChatRuntime } from "./use-chat/useVercelUseChatRuntime";
+export { useVercelUseAssistantRuntime } from "./use-assistant/useVercelUseAssistantRuntime";
+export { getVercelAIMessages } from "./getVercelAIMessages";
+export { AISDKMessageConverter } from "./utils/convertMessage";
